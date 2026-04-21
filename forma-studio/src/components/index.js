@@ -1,0 +1,13 @@
+export { Cursor } from './Cursor';
+export { Loader } from './Loader';
+export { Nav } from './Nav';
+export { Hero } from './Hero';
+export { Marquee } from './Marquee';
+export { Vision } from './Vision';
+export { Philosophy } from './Philosophy';
+export { Projects } from './Projects';
+export { Stats } from './Stats';
+export { Process } from './Process';
+export { Gallery } from './Gallery';
+export { Contact } from './Contact';
+export { Footer } from './Footer';
