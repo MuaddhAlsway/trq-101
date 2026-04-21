@@ -1,125 +1,140 @@
-# Vercel Deployment Guide
+# Deployment Guide
 
-## Quick Deploy
+## Vercel Deployment
 
-### Option 1: Deploy with Git (Recommended)
+### Prerequisites
+- GitHub account with the repository pushed
+- Vercel account (free tier works)
+
+### Steps
 
 1. **Push to GitHub**
    ```bash
-   git init
    git add .
    git commit -m "Initial commit"
-   git branch -M main
-   git remote add origin https://github.com/YOUR_USERNAME/forma-studio.git
-   git push -u origin main
+   git push origin main
    ```
 
 2. **Connect to Vercel**
    - Go to [vercel.com](https://vercel.com)
-   - Sign in with GitHub
    - Click "New Project"
-   - Select your `forma-studio` repository
-   - Vercel auto-detects Vite settings
+   - Import your GitHub repository
+   - Select the `forma-studio` folder as root directory
+
+3. **Configure Build Settings**
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+   - Install Command: `npm install`
+   - Framework: Vite (auto-detected)
+
+4. **Deploy**
    - Click "Deploy"
+   - Wait for build to complete
+   - Your site will be live at `your-project.vercel.app`
 
-3. **Done!** Your site is live at `https://forma-studio.vercel.app`
+### Troubleshooting
 
-### Option 2: Deploy with Vercel CLI
+**404 Error on Page Refresh**
+- Vercel should auto-detect Vite and handle SPA routing
+- If not, the `vercel.json` file handles rewrites
+- Ensure `vercel.json` is in the root directory
 
-1. **Install Vercel CLI**
-   ```bash
-   npm i -g vercel
+**Build Fails**
+- Check that `package.json` has all dependencies
+- Verify `npm run build` works locally: `npm run build && npm run preview`
+- Check build logs in Vercel dashboard
+
+**Styles Not Loading**
+- Ensure `src/styles/global.css` is imported in `src/main.jsx`
+- Check that CSS file path is correct
+
+## Other Platforms
+
+### Netlify
+1. Connect GitHub repository
+2. Build command: `npm run build`
+3. Publish directory: `dist`
+4. Deploy
+
+### GitHub Pages
+1. Add to `package.json`:
+   ```json
+   "homepage": "https://yourusername.github.io/forma-studio"
    ```
-
-2. **Deploy**
-   ```bash
-   vercel
+2. Install gh-pages: `npm install --save-dev gh-pages`
+3. Add scripts:
+   ```json
+   "predeploy": "npm run build",
+   "deploy": "gh-pages -d dist"
    ```
+4. Run: `npm run deploy`
 
-3. **Follow prompts** and confirm deployment
+### Self-Hosted (Node.js)
+1. Build: `npm run build`
+2. Upload `dist` folder to server
+3. Serve with any static file server:
+   ```bash
+   npx serve dist
+   ```
 
 ## Environment Variables
 
-If you need environment variables (API keys, etc.):
+If you need environment variables:
 
-1. Go to your Vercel project dashboard
-2. Settings → Environment Variables
-3. Add your variables
-4. Redeploy
+1. Create `.env.local` (not committed):
+   ```
+   VITE_API_URL=https://api.example.com
+   ```
 
-Example `.env.local` (for local development):
-```
-VITE_API_URL=https://api.example.com
-```
+2. Use in code:
+   ```javascript
+   const apiUrl = import.meta.env.VITE_API_URL;
+   ```
 
-Use in code:
-```jsx
-const apiUrl = import.meta.env.VITE_API_URL;
-```
+3. In Vercel dashboard:
+   - Go to Settings → Environment Variables
+   - Add your variables
+   - Redeploy
+
+## Performance Tips
+
+- Build is optimized by default with Vite
+- GSAP animations are GPU-accelerated
+- SVGs are lightweight
+- Consider adding image optimization for real photos
 
 ## Custom Domain
 
-1. Go to Vercel project → Settings → Domains
+### Vercel
+1. Go to project Settings → Domains
 2. Add your custom domain
-3. Update DNS records at your domain provider
-4. Vercel provides DNS instructions
+3. Update DNS records (Vercel provides instructions)
 
-## Automatic Deployments
+### Netlify
+1. Go to Site Settings → Domain Management
+2. Add custom domain
+3. Update DNS records
 
-Once connected to GitHub:
-- Every push to `main` → automatic deployment
-- Pull requests → preview deployments
-- Rollback to previous versions anytime
+## SSL/HTTPS
 
-## Build & Performance
-
-Vercel automatically:
-- Optimizes images
-- Minifies code
-- Caches assets
-- Serves from global CDN
-- Provides analytics
-
-## Troubleshooting
-
-**Build fails?**
-- Check `npm run build` works locally
-- Verify all dependencies in `package.json`
-- Check Node version (Vercel uses Node 18+)
-
-**Site shows old version?**
-- Clear browser cache (Ctrl+Shift+Delete)
-- Hard refresh (Ctrl+F5)
-- Check deployment status in Vercel dashboard
-
-**Need to rebuild?**
-- Vercel dashboard → Deployments → Redeploy
+- Vercel: Automatic (free)
+- Netlify: Automatic (free)
+- Self-hosted: Use Let's Encrypt (free)
 
 ## Monitoring
 
-Vercel provides:
-- Real-time logs
-- Performance metrics
-- Error tracking
-- Analytics dashboard
+- Vercel Analytics: Built-in
+- Netlify Analytics: Built-in
+- Custom: Use Google Analytics, Sentry, etc.
 
-Access via: Project → Analytics
+## Rollback
 
-## Cost
+### Vercel
+- Go to Deployments
+- Click on previous deployment
+- Click "Redeploy"
 
-- **Hobby plan**: Free (perfect for this project)
-- **Pro plan**: $20/month (for teams/advanced features)
-
-## Next Steps
-
-1. Deploy to Vercel
-2. Share your live URL
-3. Monitor performance in Vercel dashboard
-4. Update content as needed (auto-deploys on push)
-
-## Useful Links
-
-- [Vercel Docs](https://vercel.com/docs)
-- [Vite on Vercel](https://vercel.com/guides/nextjs-now-supports-vite)
-- [Custom Domains](https://vercel.com/docs/concepts/projects/domains)
-- [Environment Variables](https://vercel.com/docs/concepts/projects/environment-variables)
+### Netlify
+- Go to Deploys
+- Click on previous deploy
+- Click "Publish deploy"
